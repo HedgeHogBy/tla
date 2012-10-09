@@ -1,35 +1,26 @@
 window.App = {
-	history: [],
-		
+
 	//Setup namespaces
 	Mixins: {},
 	pages: {},
-	
-	initialize : function() {
-        var locationMinsk = new google.maps.LatLng(53.90564543790776, 27.554806518554642);//(долгота, широта)
-
-		Backbone.history.start();
-        this.markersArr = [];
-
-        this.mapOptions = {
-            zoom: 12,
-            center: locationMinsk,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-
-        this.geocoder = new google.maps.Geocoder();
-	},
-
-    mapInit: function(mapContainer, mapOptions) {
-        this.map = new google.maps.Map(mapContainer, mapOptions);
+    settings:{
+        zoom: 12,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
     },
 
-    directionsInit: function(map, panel){
+    initialize : function() {
+        App.Router = new Router();
+        Backbone.history.start();
+	},
+
+    mapInit: function(mapContainer, mapOptions, panel) {
+        this.map = new google.maps.Map(mapContainer, mapOptions);
         this.directionsService = new google.maps.DirectionsService();
-        this.directionDisplay = new google.maps.DirectionsRenderer();
-        this.directionsDisplay.setMap(map);
+        this.directionsDisplay = new google.maps.DirectionsRenderer();
+        this.directionsDisplay.setMap(this.map);
         this.directionsDisplay.setPanel(panel);
-    }
+        this.geocoder = new google.maps.Geocoder();
+    },
 }
 
 

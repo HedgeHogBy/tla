@@ -1,6 +1,6 @@
 // Start the App!
 $(document).ready(function(){
-	App.initialize(); 
+	App.initialize();
 });
 
 //Log all JavaScript errors
@@ -25,14 +25,6 @@ $(document).on('ajaxError', function(e, xhr, options){
 			} 			
 		}
 	}
-});
-
-$(".hover").live('touchstart', function(){
-	$(this).addClass("clicked");
-});
-
-$(".hover").live('touchend touchcancel touchmove', function(){
-	$(this).removeClass("clicked");
 });
 
 
