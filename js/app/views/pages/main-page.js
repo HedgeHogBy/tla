@@ -1,8 +1,6 @@
 App.MainPage = Backbone.View.extend({
 
 	el: $("#front"),
-    $map: $("#map"),
-    $directionsPanel: $("#directions"),
 	
     events: {
         "click #calcRoute" : "calcRoute",
@@ -17,39 +15,17 @@ App.MainPage = Backbone.View.extend({
             fillSpace: true
         });
 
+        this.mapWrapper = new MapWrapper();
+        this.panel = new Panel({map : this.mapWrapper.map});
         this.render();
 
-        google.maps.event.addListener(App.map, 'click', function (event) {
+        google.maps.event.addListener(this.mapWrapper.map, 'click', function (event) {
             that.addMarkerMap(event.latLng);
         });//добавляем событие нажание мышки
     },
 
     render : function() {
-        App.mapInit(this.$("#map").get(0), this.getMapSettings(), this.$directionsPanel.get(0));
-    },
 
-    getCurrentLocation : function() {
-        var defaultLocation = new google.maps.LatLng(53.90564543790776, 27.554806518554642),
-            currentLocation = undefined;//(долгота, широта)
-
-        if (Modernizr.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                currentLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                if(currentLocation != undefined){
-                    this.render();  //todo add propper handling (http://diveintohtml5.info/geolocation.html#divingin)
-                }
-            });
-        }
-
-        return currentLocation || defaultLocation;
-    },
-
-    getMapSettings : function(){
-        return {
-            zoom: App.settings.zoom,
-            center: this.getCurrentLocation(),
-            mapTypeId: App.settings.mapTypeId
-        };
     },
 
     addMarkerMap: function (position) {
@@ -61,7 +37,7 @@ App.MainPage = Backbone.View.extend({
 
         var marker = new google.maps.Marker({
             position: position,
-            map: App.map,
+            map: this.mapWrapper.map,
             title: title,
             zIndex: 999
         });
@@ -74,7 +50,7 @@ App.MainPage = Backbone.View.extend({
     addMarkerList: function(position, title, markerId) {
     var activePlaces = $('#active-places ul');
 
-        App.geocoder.geocode({'latLng': position}, function(results, status) {
+        this.panel.geocoder.geocode({'latLng': position}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var locationFormatted = results[1].formatted_address;
             }
@@ -99,6 +75,7 @@ App.MainPage = Backbone.View.extend({
 
     calcRoute: function () {
         var start, end, waypts = [],
+            that = this,
             locations = $('.locationLatLng','#active-places ul');
 
         locations.each(function(index, value){
@@ -121,16 +98,16 @@ App.MainPage = Backbone.View.extend({
             provideRouteAlternatives: true,
             optimizeWaypoints: true
         };
-        App.directionsService.route(request, function (result, status) {
+        this.panel.directionsService.route(request, function (result, status) {
             if (status == google.maps.DirectionsStatus.OK) {
-                App.directionsDisplay.setDirections(result);
+                that.panel.directionsDisplay.setDirections(result);
             }
         });
     },
 
     clearOverlays : function () {
         if (App.markersArr) {
-            for (var i in App.markersArr) {
+            for (var i = 0; i< App.markersArr.length; i++) {
                 App.markersArr[i].setMap(null);
             }
             /*        directionsDisplay.setMap(null);
