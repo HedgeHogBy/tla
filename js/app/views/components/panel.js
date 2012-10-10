@@ -12,5 +12,5 @@ var Panel = Backbone.View.extend({
         this.directionsDisplay.setMap(mapObject);
         this.directionsDisplay.setPanel(panelContainer);
         this.geocoder = new google.maps.Geocoder();
-    },
+    }
 });
