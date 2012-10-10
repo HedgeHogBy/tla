@@ -1,4 +1,4 @@
-var MapWrapper = Backbone.View.extend({
+var MapCase = Backbone.View.extend({
 
     el: $("#map"),
 

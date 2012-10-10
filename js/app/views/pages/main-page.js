@@ -15,11 +15,11 @@ App.MainPage = Backbone.View.extend({
             fillSpace: true
         });
 
-        this.mapWrapper = new MapWrapper();
-        this.panel = new Panel({map : this.mapWrapper.map});
+        this.mapCase = new MapCase();
+        this.panel = new Panel({map : this.mapCase.map});
         this.render();
 
-        google.maps.event.addListener(this.mapWrapper.map, 'click', function (event) {
+        google.maps.event.addListener(this.mapCase.map, 'click', function (event) {
             that.addMarkerMap(event.latLng);
         });//добавляем событие нажание мышки
     },
@@ -37,7 +37,7 @@ App.MainPage = Backbone.View.extend({
 
         var marker = new google.maps.Marker({
             position: position,
-            map: this.mapWrapper.map,
+            map: this.mapCase.map,
             title: title,
             zIndex: 999
         });
@@ -48,7 +48,7 @@ App.MainPage = Backbone.View.extend({
     },
 
     addMarkerList: function(position, title, markerId) {
-    var activePlaces = $('#active-places ul');
+        var activePlaces = $('#active-places ul');
 
         this.panel.geocoder.geocode({'latLng': position}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
