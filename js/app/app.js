@@ -7,6 +7,7 @@ window.App = {
         zoom: 12,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     },
+    markersArr: [],
 
     initialize : function() {
         App.Router = new Router();
